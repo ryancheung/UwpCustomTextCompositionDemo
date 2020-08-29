@@ -66,6 +66,7 @@ namespace UwpCustomTextCompositionDemo
             _coreWindow = CoreWindow.GetForCurrentThread();
             _coreWindow.KeyDown += CoreWindow_KeyDown;
             _coreWindow.CharacterReceived += CoreWindow_CharacterReceived;
+            _coreWindow.Activated += _coreWindow_Activated;
 
             // Create a CoreTextEditContext for our custom edit control.
             CoreTextServicesManager manager = CoreTextServicesManager.GetForCurrentView();
@@ -129,6 +130,15 @@ namespace UwpCustomTextCompositionDemo
                 foreach (var c in _lastResultText)
                     OnTextInput(c);
             };
+        }
+
+        private void _coreWindow_Activated(CoreWindow sender, WindowActivatedEventArgs args)
+        {
+            if (_internalFocus)
+            {
+                _editContext.NotifyFocusEnter();
+                _inputPane.TryShow();
+            }
         }
 
         private void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
